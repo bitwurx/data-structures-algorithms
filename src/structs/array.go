@@ -15,16 +15,17 @@ func (item IntItem) CheckValue(val interface{}) bool {
 type Array struct {
     Items []ArrayItem
     Count int
+    Size int
 }
 
 func (arr *Array) Delete(val interface{}) {
-    for i, item := range arr.Items {
-        if arr.Items[i] == nil {
-            break
-        } else if item.CheckValue(val) {
-            for j := i; j < arr.Count; j++ {
+    for i := 0; i < arr.Count; i++ {
+        item := arr.Items[i]
+        if item.CheckValue(val) == true {
+            for j := i; j < arr.Count-1; j++ {
                 arr.Items[j] = arr.Items[j+1]
             }
+            arr.Count--
         }
     }
 }
@@ -46,6 +47,6 @@ func (arr *Array) Insert(item ArrayItem) {
 }
 
 func NewArray(size int) *Array {
-    arr := &Array{make([]ArrayItem, size), 0}
+    arr := &Array{make([]ArrayItem, size), 0, size}
     return arr
 }
