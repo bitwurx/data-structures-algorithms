@@ -6,7 +6,7 @@ const (
 
 type ArrayItem interface {
     CheckValue(interface{}) bool
-    CheckValueBin(interface{}) int
+    Compare(interface{}) int
     GreaterThan(interface{}) bool
 }
 
@@ -18,7 +18,7 @@ func (item IntItem) CheckValue(val interface{}) bool {
     return val.(int) == item.Value
 }
 
-func (item IntItem) CheckValueBin(val interface{}) int {
+func (item IntItem) Compare(val interface{}) int {
     if val.(int) == item.Value {
         return 0
     } else if val.(int) > item.Value {
@@ -97,7 +97,25 @@ func (arr *OrderedArray) Delete(val interface{}) {
 }
 
 func (arr *OrderedArray) Find(val interface{}) int {
-    return 0
+    lower := 0
+    upper := arr.Count - 1
+
+    for {
+        i := (lower + upper) / 2
+        v := arr.Items[i].Compare(val)
+        if lower > upper {
+            return -1
+        }
+        if v == 0 {
+            return i
+        }
+        if v == 1 {
+            lower = i + 1
+        }
+        if v == -1 {
+            upper = i - 1
+        }
+    }
 }
 
 func (arr *OrderedArray) GetItems() []ArrayItem {
